@@ -1,18 +1,27 @@
 package com.jsimplec.todolist.activity.auth;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.jsimplec.todolist.MainActivity;
 import com.jsimplec.todolist.R;
+import com.jsimplec.todolist.callback.SuccessErrorCallBack;
+import com.jsimplec.todolist.model.TokenResponseDTO;
+
+import static com.jsimplec.todolist.httpclient.AuthClient.AUTH_CLIENT;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String PREFERENCE_NAME = "TODO_auth";
     private Button loginButton;
     private TextInputLayout passwordLayout;
     private TextInputLayout usernameLayout;
@@ -45,7 +54,35 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String username, String password) {
-        Log.i("Login", String.format("logging user %s %s\n", username, password));
+        AUTH_CLIENT.login(username, password, new SuccessErrorCallBack<TokenResponseDTO>() {
+            @Override
+            public void onSuccess(TokenResponseDTO response) {
+                saveToStore("token", response.getToken());
+                saveToStore("username", username);
+                runOnUiThread(() -> directToMainPage());
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                runOnUiThread(() -> showErrorDialog(errorMessage));
+            }
+        });
+    }
+
+    private void showErrorDialog(String errorMessage) {
+        new AlertDialog.Builder(this)
+                .setMessage(errorMessage)
+                .show();
+    }
+
+    private void directToMainPage() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void saveToStore(String key, String value) {
+        SharedPreferences preferences = getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        preferences.edit().putString(key, value).apply();
     }
 
     private TextWatcher clearErrors(TextInputLayout textInputLayout) {
