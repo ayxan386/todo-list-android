@@ -12,8 +12,8 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.jsimplec.todolist.MainActivity;
 import com.jsimplec.todolist.R;
+import com.jsimplec.todolist.activity.main.MainActivity;
 import com.jsimplec.todolist.callback.SuccessErrorCallBack;
 import com.jsimplec.todolist.model.TokenResponseDTO;
 
