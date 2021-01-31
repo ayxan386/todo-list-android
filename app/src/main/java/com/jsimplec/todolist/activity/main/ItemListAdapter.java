@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jsimplec.todolist.R;
@@ -13,8 +15,7 @@ import com.jsimplec.todolist.model.ItemList;
 
 import java.util.List;
 
-public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHolder> {
-    private final List<ItemList> data;
+public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewHolder> {
 
     @NonNull
     @Override
@@ -26,14 +27,10 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.title.setText(data.get(position).getName());
-        holder.content.setText(data.get(position).getItems().toString());
-        holder.date.setText(data.get(position).getUpdateDate());
-    }
-
-    @Override
-    public int getItemCount() {
-        return data.size();
+        ItemList itemList = getItem(position);
+        holder.title.setText(itemList.getName());
+        holder.content.setText(itemList.getItems().toString());
+        holder.date.setText(itemList.getUpdateDate());
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -50,7 +47,22 @@ public class ItemListAdapter extends RecyclerView.Adapter<ItemListAdapter.ViewHo
         }
     }
 
-    public ItemListAdapter(List<ItemList> data) {
-        this.data = data;
+    public ItemListAdapter() {
+        super(DIFF_CALLBACK);
     }
+
+    private static final DiffUtil.ItemCallback<ItemList> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<ItemList>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull ItemList oldData,
+                                               @NonNull ItemList newData) {
+                    return oldData.equals(newData);
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull ItemList oldData,
+                                                  @NonNull ItemList newData) {
+                    return oldData.equals(newData);
+                }
+            };
 }
