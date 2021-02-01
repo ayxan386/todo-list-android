@@ -1,13 +1,11 @@
 package com.jsimplec.todolist.model;
 
-import java.util.Objects;
-
 public class Item {
-    private String id;
-    private String title;
-    private String content;
-    private String status;
-    private String updateDate;
+    private final String id;
+    private final String title;
+    private final String content;
+    private final String status;
+    private final String updateDate;
 
     public Item(String id, String title, String content, String status, String updateDate) {
         this.id = id;

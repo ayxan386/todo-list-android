@@ -1,8 +1,8 @@
 package com.jsimplec.todolist.model;
 
 public class LoginRequestDTO {
-    private String nickname;
-    private String password;
+    private final String nickname;
+    private final String password;
 
     public LoginRequestDTO(String nickname, String password) {
         this.nickname = nickname;

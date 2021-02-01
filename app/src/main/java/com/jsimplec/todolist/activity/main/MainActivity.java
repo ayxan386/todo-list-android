@@ -1,5 +1,8 @@
 package com.jsimplec.todolist.activity.main;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.jsimplec.todolist.R;
+import com.jsimplec.todolist.activity.auth.LoginActivity;
 import com.jsimplec.todolist.callback.SuccessErrorCallBack;
 import com.jsimplec.todolist.httpclient.ItemsClient;
 import com.jsimplec.todolist.model.ItemList;
+import com.jsimplec.todolist.util.constants.StaticConstants;
 
 import java.util.List;
 
@@ -21,10 +26,19 @@ public class MainActivity extends AppCompatActivity {
 
     private ItemListAdapter listAdapter;
     private RecyclerView listView;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        preferences = getSharedPreferences(StaticConstants.PREFERENCE_TODO_AUTH, Context.MODE_PRIVATE);
+
+        if (!checkForToken()) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+
         setContentView(R.layout.activity_main);
 
         listView = findViewById(R.id.listView);
@@ -36,12 +50,17 @@ public class MainActivity extends AppCompatActivity {
         loadData();
     }
 
+    private boolean checkForToken() {
+        return preferences.contains("token");
+    }
+
     private void loadData() {
         ItemsClient.ITEMS_CLIENT
-                .loadData("token", new SuccessErrorCallBack<List<ItemList>>() {
+                .loadData(getToken(), new SuccessErrorCallBack<List<ItemList>>() {
                     @Override
                     public void onSuccess(List<ItemList> response) {
                         Log.i("Main", "load success");
+                        Log.i("Main", response.toString());
                         runOnUiThread(() -> listAdapter.submitList(response));
                     }
 
@@ -50,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
                         runOnUiThread(() -> showError(errorMessage));
                     }
                 });
+    }
+
+    private String getToken() {
+        return preferences.getString("token", "123");
     }
 
     private void showError(String errorMessage) {

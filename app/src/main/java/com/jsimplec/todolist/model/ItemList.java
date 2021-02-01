@@ -1,14 +1,13 @@
 package com.jsimplec.todolist.model;
 
 import java.util.List;
-import java.util.Objects;
 
 public class ItemList {
-    private String id;
-    private String name;
-    private String username;
-    private String updateDate;
-    private List<Item> items;
+    private final String id;
+    private final String name;
+    private final String username;
+    private final String updateDate;
+    private final List<Item> items;
 
     public ItemList(String id, String name, String username, String updateDate, List<Item> items) {
         this.id = id;
@@ -49,5 +48,10 @@ public class ItemList {
     @Override
     public int hashCode() {
         return id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ItemList{id='%s'}", id);
     }
 }
