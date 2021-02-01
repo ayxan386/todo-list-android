@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.jsimplec.todolist.callback.SuccessErrorCallBack;
+import com.jsimplec.todolist.constants.StaticConstants;
 import com.jsimplec.todolist.model.ErrorResponse;
 import com.jsimplec.todolist.model.LoginRequestDTO;
 import com.jsimplec.todolist.model.TokenResponseDTO;
@@ -20,14 +21,15 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.jsimplec.todolist.constants.StaticConstants.MS_BASE_URL;
+
 public class AuthClient {
 
     public static final MediaType JSON
             = MediaType.get("application/json; charset=utf-8");
 
-    private OkHttpClient httpClient;
+    private final OkHttpClient httpClient;
     public static final AuthClient AUTH_CLIENT = new AuthClient();
-    private final String baseUrl = "https://todo-list-2021.herokuapp.com";
     private static final Gson gson = new Gson();
 
     private AuthClient() {
@@ -37,7 +39,7 @@ public class AuthClient {
     public void login(String username, String password, SuccessErrorCallBack<TokenResponseDTO> callBack) {
         LoginRequestDTO requestDTO = new LoginRequestDTO(username, password);
         Request request = new Request.Builder()
-                .url(String.format("%s/auth/login", baseUrl))
+                .url(String.format("%s/auth/login", MS_BASE_URL))
                 .post(RequestBody.create(gson.toJson(requestDTO).getBytes(), JSON))
                 .build();
         httpClient.newCall(request)
