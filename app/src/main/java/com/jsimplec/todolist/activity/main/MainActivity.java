@@ -16,9 +16,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.jsimplec.todolist.R;
 import com.jsimplec.todolist.activity.auth.LoginActivity;
 import com.jsimplec.todolist.callback.SuccessErrorCallBack;
-import com.jsimplec.todolist.util.constants.StaticConstants;
 import com.jsimplec.todolist.httpclient.ItemsClient;
 import com.jsimplec.todolist.model.ItemList;
+import com.jsimplec.todolist.util.constants.StaticConstants;
 
 import java.util.List;
 

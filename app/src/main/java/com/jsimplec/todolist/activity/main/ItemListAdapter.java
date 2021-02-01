@@ -13,43 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.jsimplec.todolist.R;
 import com.jsimplec.todolist.model.ItemList;
 
-import java.util.List;
-
 public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewHolder> {
-
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_layout, parent, false);
-        return new ViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ItemList itemList = getItem(position);
-        holder.title.setText(itemList.getName());
-        holder.content.setText(itemList.getItems().toString());
-        holder.date.setText(itemList.getUpdateDate());
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        private final TextView title;
-        private final TextView content;
-        private final TextView date;
-
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
-            title = itemView.findViewById(R.id.title);
-            content = itemView.findViewById(R.id.content);
-            date = itemView.findViewById(R.id.date);
-        }
-    }
-
-    public ItemListAdapter() {
-        super(DIFF_CALLBACK);
-    }
 
     private static final DiffUtil.ItemCallback<ItemList> DIFF_CALLBACK =
             new DiffUtil.ItemCallback<ItemList>() {
@@ -65,4 +29,42 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
                     return oldData.equals(newData);
                 }
             };
+
+    public ItemListAdapter() {
+        super(DIFF_CALLBACK);
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_layout, parent, false);
+        return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        ItemList itemList = getItem(position);
+        holder.bind(itemList);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        private final TextView title;
+        private final TextView content;
+        private final TextView date;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            title = itemView.findViewById(R.id.title);
+            content = itemView.findViewById(R.id.content);
+            date = itemView.findViewById(R.id.date);
+        }
+
+        public void bind(ItemList itemList) {
+            title.setText(itemList.getName());
+            content.setText(itemList.getItems().toString());
+            date.setText(itemList.getUpdateDate());
+        }
+    }
 }

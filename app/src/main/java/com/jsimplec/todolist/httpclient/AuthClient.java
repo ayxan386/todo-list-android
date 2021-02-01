@@ -26,13 +26,16 @@ public class AuthClient {
 
     public static final MediaType JSON
             = MediaType.get("application/json; charset=utf-8");
-
-    private final OkHttpClient httpClient;
     public static final AuthClient AUTH_CLIENT = new AuthClient();
     private static final Gson gson = new Gson();
+    private final OkHttpClient httpClient;
 
     private AuthClient() {
         httpClient = new OkHttpClient();
+    }
+
+    public static ErrorResponse getErrorResponse(Response response) throws IOException {
+        return gson.fromJson(response.body().string(), ErrorResponse.class);
     }
 
     public void login(String username, String password, SuccessErrorCallBack<TokenResponseDTO> callBack) {
@@ -61,9 +64,5 @@ public class AuthClient {
                         }
                     }
                 });
-    }
-
-    public static ErrorResponse getErrorResponse(Response response) throws IOException {
-        return gson.fromJson(response.body().string(), ErrorResponse.class);
     }
 }
