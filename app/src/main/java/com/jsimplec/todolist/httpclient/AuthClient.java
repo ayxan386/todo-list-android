@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.jsimplec.todolist.callback.SuccessErrorCallBack;
-import com.jsimplec.todolist.constants.StaticConstants;
 import com.jsimplec.todolist.model.ErrorResponse;
 import com.jsimplec.todolist.model.LoginRequestDTO;
 import com.jsimplec.todolist.model.TokenResponseDTO;
@@ -21,7 +20,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.jsimplec.todolist.constants.StaticConstants.MS_BASE_URL;
+import static com.jsimplec.todolist.util.constants.StaticConstants.MS_BASE_URL;
 
 public class AuthClient {
 

@@ -15,13 +15,14 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.jsimplec.todolist.R;
 import com.jsimplec.todolist.activity.main.MainActivity;
 import com.jsimplec.todolist.callback.SuccessErrorCallBack;
+import com.jsimplec.todolist.util.constants.StaticConstants;
 import com.jsimplec.todolist.model.TokenResponseDTO;
 
 import static com.jsimplec.todolist.httpclient.AuthClient.AUTH_CLIENT;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String PREFERENCE_NAME = "TODO_auth";
+    private static final String PREFERENCE_NAME = StaticConstants.PREFERENCE_TODO_AUTH;
     private Button loginButton;
     private TextInputLayout passwordLayout;
     private TextInputLayout usernameLayout;
