@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +39,7 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_layout, parent, false);
+                .inflate(R.layout.item_list_layout, parent, false);
         return new ViewHolder(view);
     }
 
@@ -51,20 +52,23 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView title;
-        private final TextView content;
-        private final TextView date;
+        private final RecyclerView content;
+        private final ItemAdapter itemAdapter;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             content = itemView.findViewById(R.id.content);
-            date = itemView.findViewById(R.id.date);
+
+            itemAdapter = new ItemAdapter();
+            content.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
+            content.setAdapter(itemAdapter);
         }
 
         public void bind(ItemList itemList) {
             title.setText(itemList.getName());
-            content.setText(itemList.getItems().toString());
-            date.setText(itemList.getUpdateDate());
+            itemAdapter.submitList(itemList.getItems());
         }
     }
 }

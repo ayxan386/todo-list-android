@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -59,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
                 .loadData(getToken(), new SuccessErrorCallBack<List<ItemList>>() {
                     @Override
                     public void onSuccess(List<ItemList> response) {
-                        Log.i("Main", "load success");
-                        Log.i("Main", response.toString());
                         runOnUiThread(() -> listAdapter.submitList(response));
                     }
 
