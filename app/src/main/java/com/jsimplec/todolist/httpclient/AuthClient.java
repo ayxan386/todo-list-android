@@ -20,12 +20,12 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.jsimplec.todolist.util.constants.StaticConstants.JSON;
 import static com.jsimplec.todolist.util.constants.StaticConstants.MS_BASE_URL;
 
 public class AuthClient {
 
-    public static final MediaType JSON
-            = MediaType.get("application/json; charset=utf-8");
+
     public static final AuthClient AUTH_CLIENT = new AuthClient();
     private static final Gson gson = new Gson();
     private final OkHttpClient httpClient;
