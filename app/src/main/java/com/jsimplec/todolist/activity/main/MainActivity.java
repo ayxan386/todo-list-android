@@ -26,11 +26,13 @@ public class MainActivity extends AppCompatActivity {
     private ItemListAdapter listAdapter;
     private RecyclerView listView;
     private SharedPreferences preferences;
+    public static Context applicationContext;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        applicationContext = getApplicationContext();
         preferences = getSharedPreferences(StaticConstants.PREFERENCE_TODO_AUTH, Context.MODE_PRIVATE);
 
         if (!checkForToken()) {
