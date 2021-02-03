@@ -18,6 +18,8 @@ import com.jsimplec.todolist.callback.SuccessErrorCallBack;
 import com.jsimplec.todolist.model.TokenResponseDTO;
 import com.jsimplec.todolist.util.constants.StaticConstants;
 
+import java.util.Date;
+
 import static com.jsimplec.todolist.httpclient.AuthClient.AUTH_CLIENT;
 
 public class LoginActivity extends AppCompatActivity {
@@ -26,10 +28,15 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextInputLayout passwordLayout;
     private TextInputLayout usernameLayout;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        preferences = getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        checkForToken();
+
         setContentView(R.layout.activity_login);
 
         loginButton = findViewById(R.id.loginButton);
@@ -39,6 +46,16 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener((v) -> handleLoginButtonClicked());
         usernameLayout.getEditText().addTextChangedListener(clearErrors(usernameLayout));
         passwordLayout.getEditText().addTextChangedListener(clearErrors(passwordLayout));
+    }
+
+    private void checkForToken() {
+        boolean isTokenPresent = !preferences.getString("token", "empty").equals("empty");
+        Date date = new Date();
+        long tokenGivenDate = preferences.getLong("token_given_date", 1000000);
+        boolean isTokenNotExpired = tokenGivenDate + 900000 > date.getTime();
+        if (isTokenPresent && isTokenNotExpired) {
+            directToMainPage();
+        }
     }
 
     private void handleLoginButtonClicked() {
@@ -58,6 +75,8 @@ public class LoginActivity extends AppCompatActivity {
         AUTH_CLIENT.login(username, password, new SuccessErrorCallBack<TokenResponseDTO>() {
             @Override
             public void onSuccess(TokenResponseDTO response) {
+                Date currentDate = new Date();
+                preferences.edit().putLong("token_given_date", currentDate.getTime()).apply();
                 saveToStore("token", response.getToken());
                 saveToStore("username", username);
                 runOnUiThread(() -> directToMainPage());
@@ -82,7 +101,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void saveToStore(String key, String value) {
-        SharedPreferences preferences = getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         preferences.edit().putString(key, value).apply();
     }
 
