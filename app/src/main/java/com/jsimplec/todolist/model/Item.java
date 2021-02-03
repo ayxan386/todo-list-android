@@ -15,6 +15,18 @@ public class Item {
         this.updateDate = updateDate;
     }
 
+    public Item buildItem(String content, String status) {
+        return new Item(id, title, content, status, updateDate);
+    }
+
+    public static boolean getActiveStatus(String status) {
+        return status.equals("DONE");
+    }
+
+    public static String getStatusFromBool(boolean isChecked) {
+        return isChecked ? "DONE" : "IN_PROGRESS";
+    }
+
     public String getId() {
         return id;
     }
