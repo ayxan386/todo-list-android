@@ -44,13 +44,13 @@ public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
         private final TextView title;
         private final MaterialCheckBox status;
         private Item item;
+        private boolean hasBinded;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.itemTitle);
             status = itemView.findViewById(R.id.itemCheckBox);
 
-            status.setOnCheckedChangeListener(updateStatus());
         }
 
         @NotNull
@@ -64,9 +64,13 @@ public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
         }
 
         public void bind(Item item) {
-            title.setText(item.getTitle());
-            status.setActivated(Item.getActiveStatus(item.getStatus()));
             this.item = item;
+            if (!hasBinded) {
+                status.setOnCheckedChangeListener(updateStatus());
+                hasBinded = true;
+            }
+            title.setText(item.getTitle());
+            status.setChecked(Item.getActiveStatus(item.getStatus()));
         }
     }
 
