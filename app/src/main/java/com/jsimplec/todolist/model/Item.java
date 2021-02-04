@@ -1,6 +1,9 @@
 package com.jsimplec.todolist.model;
 
-public class Item {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Item implements Parcelable {
     private final String id;
     private final String title;
     private final String content;
@@ -14,6 +17,40 @@ public class Item {
         this.status = status;
         this.updateDate = updateDate;
     }
+
+    protected Item(Parcel in) {
+        id = in.readString();
+        title = in.readString();
+        content = in.readString();
+        status = in.readString();
+        updateDate = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(content);
+        dest.writeString(status);
+        dest.writeString(updateDate);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Item> CREATOR = new Creator<Item>() {
+        @Override
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        @Override
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
 
     public Item buildItem(String content, String status) {
         return new Item(id, title, content, status, updateDate);
