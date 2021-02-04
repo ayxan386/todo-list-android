@@ -43,7 +43,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         listView = findViewById(R.id.listView);
-        listAdapter = new ItemListAdapter();
+        listAdapter = new ItemListAdapter((activity, data) -> {
+            Intent intent = new Intent(MainActivity.this, activity);
+            intent.putExtra("item", data);
+            MainActivity.this.startActivity(intent);
+        });
 
         listView.setAdapter(listAdapter);
         listView.setLayoutManager(new LinearLayoutManager(this));
