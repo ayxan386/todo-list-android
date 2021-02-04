@@ -1,7 +1,5 @@
 package com.jsimplec.todolist.activity.main;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.jsimplec.todolist.R;
 import com.jsimplec.todolist.callback.ErrorCallBack;
+import com.jsimplec.todolist.callback.StartActivityCallBack;
 import com.jsimplec.todolist.httpclient.ItemsClient;
 import com.jsimplec.todolist.model.Item;
 
@@ -24,8 +23,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
 
-    protected ItemAdapter() {
+    private StartActivityCallBack callBack;
+
+    protected ItemAdapter(StartActivityCallBack callBack) {
         super(DIFF_CALLBACK);
+        this.callBack = callBack;
     }
 
     @NonNull
@@ -33,7 +35,7 @@ public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_layout, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, callBack);
     }
 
     @Override
@@ -45,14 +47,16 @@ public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
 
         private final TextView title;
         private final MaterialCheckBox status;
+        private StartActivityCallBack callBack;
         private Item item;
         private boolean hasBinded;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, StartActivityCallBack callBack) {
             super(itemView);
             title = itemView.findViewById(R.id.itemTitle);
             status = itemView.findViewById(R.id.itemCheckBox);
 
+            this.callBack = callBack;
         }
 
         @NotNull
@@ -70,10 +74,7 @@ public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
             if (!hasBinded) {
                 status.setOnCheckedChangeListener(updateStatus());
                 title.setOnClickListener(view -> {
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable("item", item);
-                    Intent intent = new Intent(MainActivity.applicationContext, ItemDetailActivity.class);
-                    MainActivity.applicationContext.startActivity(intent);
+                    callBack.startActivity(ItemDetailActivity.class, item);
                 });
                 hasBinded = true;
             }

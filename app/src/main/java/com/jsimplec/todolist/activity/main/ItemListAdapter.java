@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jsimplec.todolist.R;
+import com.jsimplec.todolist.callback.StartActivityCallBack;
 import com.jsimplec.todolist.model.ItemList;
 
 public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewHolder> {
@@ -30,9 +31,11 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
                     return oldData.equals(newData);
                 }
             };
+    private StartActivityCallBack callBack;
 
-    public ItemListAdapter() {
+    public ItemListAdapter(StartActivityCallBack callBack) {
         super(DIFF_CALLBACK);
+        this.callBack = callBack;
     }
 
     @NonNull
@@ -40,7 +43,7 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_list_layout, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, callBack);
     }
 
     @Override
@@ -55,13 +58,12 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
         private final RecyclerView content;
         private final ItemAdapter itemAdapter;
 
-
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, StartActivityCallBack callBack) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             content = itemView.findViewById(R.id.content);
 
-            itemAdapter = new ItemAdapter();
+            itemAdapter = new ItemAdapter(callBack);
             content.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
             content.setAdapter(itemAdapter);
         }
