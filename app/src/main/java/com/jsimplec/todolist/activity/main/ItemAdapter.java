@@ -1,5 +1,7 @@
 package com.jsimplec.todolist.activity.main;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,6 +69,12 @@ public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
             this.item = item;
             if (!hasBinded) {
                 status.setOnCheckedChangeListener(updateStatus());
+                title.setOnClickListener(view -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable("item", item);
+                    Intent intent = new Intent(MainActivity.applicationContext, ItemDetailActivity.class);
+                    MainActivity.applicationContext.startActivity(intent);
+                });
                 hasBinded = true;
             }
             title.setText(item.getTitle());
