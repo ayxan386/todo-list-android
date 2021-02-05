@@ -31,6 +31,7 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
                     return oldData.equals(newData);
                 }
             };
+
     private StartActivityCallBack callBack;
 
     public ItemListAdapter(StartActivityCallBack callBack) {

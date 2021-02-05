@@ -3,6 +3,7 @@ package com.jsimplec.todolist.activity.main;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,13 +11,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.jsimplec.todolist.R;
-import com.jsimplec.todolist.callback.ErrorCallBack;
+import com.jsimplec.todolist.callback.SuccessErrorCallBack;
 import com.jsimplec.todolist.httpclient.ItemsClient;
 import com.jsimplec.todolist.model.Item;
 
 import org.jetbrains.annotations.NotNull;
 
 public class ItemDetailActivity extends AppCompatActivity {
+
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,7 @@ public class ItemDetailActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.detailTitle);
         TextInputLayout content = findViewById(R.id.detailContent);
         TextView date = findViewById(R.id.updateDate);
+        progressBar = findViewById(R.id.detailProgressbar);
 
         title.setText(item.getTitle());
         content.getEditText().setText(item.getContent());
@@ -41,9 +45,21 @@ public class ItemDetailActivity extends AppCompatActivity {
     @NotNull
     private View.OnClickListener updateItemRequest(Item item, TextInputLayout content) {
         return v -> {
+            progressBar.setVisibility(View.VISIBLE);
             Item updatedItem = item.buildItem(content.getEditText().getText().toString(), item.getStatus());
-            ItemsClient.ITEMS_CLIENT.updateItem(updatedItem, (ErrorCallBack) errorMessage -> {
-                runOnUiThread(() -> displayErrorSnackBar(errorMessage));
+            ItemsClient.ITEMS_CLIENT.updateItem(updatedItem, new SuccessErrorCallBack<String>() {
+                @Override
+                public void onSuccess(String response) {
+                    runOnUiThread(() -> progressBar.setVisibility(View.GONE));
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    runOnUiThread(() -> {
+                        progressBar.setVisibility(View.GONE);
+                        displayErrorSnackBar(errorMessage);
+                    });
+                }
             });
         };
     }
