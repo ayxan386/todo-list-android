@@ -23,9 +23,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
 
-    private StartActivityCallBack callBack;
+    private final StartActivityCallBack<Item> callBack;
 
-    protected ItemAdapter(StartActivityCallBack callBack) {
+    protected ItemAdapter(StartActivityCallBack<Item> callBack) {
         super(DIFF_CALLBACK);
         this.callBack = callBack;
     }
@@ -47,11 +47,11 @@ public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
 
         private final TextView title;
         private final MaterialCheckBox status;
-        private StartActivityCallBack callBack;
+        private final StartActivityCallBack<Item> callBack;
         private Item item;
         private boolean hasBinded;
 
-        public ViewHolder(@NonNull View itemView, StartActivityCallBack callBack) {
+        public ViewHolder(@NonNull View itemView, StartActivityCallBack<Item> callBack) {
             super(itemView);
             title = itemView.findViewById(R.id.itemTitle);
             status = itemView.findViewById(R.id.itemCheckBox);
