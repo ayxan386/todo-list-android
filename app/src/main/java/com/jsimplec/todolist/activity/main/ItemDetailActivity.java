@@ -30,12 +30,12 @@ public class ItemDetailActivity extends AppCompatActivity {
 
         TextView title = findViewById(R.id.detailTitle);
         TextInputLayout content = findViewById(R.id.detailContent);
-        TextView date = findViewById(R.id.updateDate);
+//        TextView date = findViewById(R.id.updateDate);
         progressBar = findViewById(R.id.detailProgressbar);
 
         title.setText(item.getTitle());
         content.getEditText().setText(item.getContent());
-        date.setText(item.getUpdateDate());
+//        date.setText(item.getUpdateDate());
 
         Button submitButton = findViewById(R.id.detailSubmit);
         submitButton.setOnClickListener(updateItemRequest(item, content));
