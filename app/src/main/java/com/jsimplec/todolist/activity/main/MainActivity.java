@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,10 +28,13 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView listView;
     private SharedPreferences preferences;
     public static Context applicationContext;
+    public static MainActivity mainActivity;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainActivity = this;
 
         applicationContext = getApplicationContext();
         preferences = getSharedPreferences(StaticConstants.PREFERENCE_TODO_AUTH, Context.MODE_PRIVATE);
@@ -52,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(listAdapter);
         listView.setLayoutManager(new LinearLayoutManager(this));
 
+        progressBar = findViewById(R.id.mainLoaderBar);
+
         loadData();
     }
 
@@ -60,22 +66,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadData() {
+        setProgressBar(true);
         ItemsClient.ITEMS_CLIENT
                 .loadData(getToken(), new SuccessErrorCallBack<List<ItemList>>() {
                     @Override
                     public void onSuccess(List<ItemList> response) {
-                        runOnUiThread(() -> listAdapter.submitList(response));
+                        setProgressBar(false);
+                        runOnUiThread(() -> {
+                            listAdapter.submitList(response);
+                        });
                     }
 
                     @Override
                     public void onError(String errorMessage) {
-                        runOnUiThread(() -> showError(errorMessage));
+                        showError(errorMessage);
+                        runOnUiThread(() -> {
+                            setProgressBar(false);
+                        });
                     }
                 });
     }
 
     private String getToken() {
         return preferences.getString("token", "123");
+    }
+
+    public void showMainError(String errorMessage) {
+        runOnUiThread(() -> showError(errorMessage));
     }
 
     private void showError(String errorMessage) {
@@ -87,5 +104,15 @@ public class MainActivity extends AppCompatActivity {
             snackbar.dismiss();
         });
         snackbar.show();
+    }
+
+    public void setProgressBar(boolean isVisible) {
+        runOnUiThread(() -> {
+            if (isVisible) {
+                progressBar.setVisibility(View.VISIBLE);
+            } else {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 }
