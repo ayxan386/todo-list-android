@@ -11,8 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.jsimplec.todolist.R;
 import com.jsimplec.todolist.callback.StartActivityCallBack;
+import com.jsimplec.todolist.callback.SuccessErrorCallBack;
+import com.jsimplec.todolist.httpclient.ItemsClient;
+import com.jsimplec.todolist.model.Item;
 import com.jsimplec.todolist.model.ItemList;
 
 public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewHolder> {
@@ -58,18 +63,50 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
         private final TextView title;
         private final RecyclerView content;
         private final ItemAdapter itemAdapter;
+        private final TextInputLayout itemTitle;
+        private final MaterialButton addItemButton;
+        private ItemList data;
 
         public ViewHolder(@NonNull View itemView, StartActivityCallBack callBack) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
+            itemTitle = itemView.findViewById(R.id.itemListItemTitle);
+            addItemButton = itemView.findViewById(R.id.itemListSave);
             content = itemView.findViewById(R.id.content);
 
             itemAdapter = new ItemAdapter(callBack);
             content.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
             content.setAdapter(itemAdapter);
+
+        }
+
+        private void saveNewItem() {
+            MainActivity.mainActivity.setProgressBar(true);
+            ItemsClient.ITEMS_CLIENT.saveItem(new Item(null,
+                    itemTitle.getEditText().getText().toString(),
+                    null,
+                    "IN_PROGRESS",
+                    null,
+                    data.getId()), new SuccessErrorCallBack<Item>() {
+                @Override
+                public void onSuccess(Item response) {
+                    MainActivity.mainActivity.setProgressBar(false);
+                    bind(data.addItem(response));
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+                    MainActivity.mainActivity.setProgressBar(false);
+                    MainActivity.mainActivity.showMainError(errorMessage);
+                }
+            });
         }
 
         public void bind(ItemList itemList) {
+            data = itemList;
+            if (data != null) {
+                addItemButton.setOnClickListener(v -> saveNewItem());
+            }
             title.setText(itemList.getName());
             itemAdapter.submitList(itemList.getItems());
         }

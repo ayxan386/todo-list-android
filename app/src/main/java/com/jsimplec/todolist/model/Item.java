@@ -9,13 +9,15 @@ public class Item implements Parcelable {
     private final String content;
     private final String status;
     private final String updateDate;
+    private final String itemListId;
 
-    public Item(String id, String title, String content, String status, String updateDate) {
+    public Item(String id, String title, String content, String status, String updateDate, String itemListId) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.status = status;
         this.updateDate = updateDate;
+        this.itemListId = itemListId;
     }
 
     protected Item(Parcel in) {
@@ -24,6 +26,7 @@ public class Item implements Parcelable {
         content = in.readString();
         status = in.readString();
         updateDate = in.readString();
+        this.itemListId = in.readString();
     }
 
     @Override
@@ -53,7 +56,7 @@ public class Item implements Parcelable {
     };
 
     public Item buildItem(String content, String status) {
-        return new Item(id, title, content, status, updateDate);
+        return new Item(id, title, content, status, updateDate, itemListId);
     }
 
     public static boolean getActiveStatus(String status) {
@@ -82,6 +85,10 @@ public class Item implements Parcelable {
 
     public String getUpdateDate() {
         return updateDate;
+    }
+
+    public String getItemListId() {
+        return itemListId;
     }
 
     @Override

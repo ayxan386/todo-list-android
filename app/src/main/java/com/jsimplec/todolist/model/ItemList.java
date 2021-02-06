@@ -1,5 +1,6 @@
 package com.jsimplec.todolist.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemList {
@@ -53,5 +54,11 @@ public class ItemList {
     @Override
     public String toString() {
         return String.format("ItemList{id='%s'}", id);
+    }
+
+    public ItemList addItem(Item item) {
+        ArrayList<Item> newItems = new ArrayList<>(this.items);
+        newItems.add(item);
+        return new ItemList(id, name, username, updateDate, newItems);
     }
 }

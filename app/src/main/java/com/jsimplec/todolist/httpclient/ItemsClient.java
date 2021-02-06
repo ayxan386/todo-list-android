@@ -96,4 +96,33 @@ public class ItemsClient {
                     }
                 });
     }
+
+    public void saveItem(Item newItem, SuccessErrorCallBack<Item> callBack) {
+        SharedPreferences preferences = MainActivity.applicationContext
+                .getSharedPreferences(StaticConstants.PREFERENCE_TODO_AUTH, Context.MODE_PRIVATE);
+        String token = preferences.getString("token", "123");
+        String requestBody = objectMapper.toJson(newItem);
+        Request request = new Request.Builder()
+                .url(String.format("%s/item-list/addItem", MS_BASE_URL))
+                .header(StaticConstants.AUTHORIZATION_HEADER_NAME, HttpUtils.makeAuthHeader(token))
+                .put(RequestBody.create(requestBody, JSON))
+                .build();
+        httpClient.newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        callBack.onError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        RestResponseDto<Item> responseDto = objectMapper.fromJson(response.body().string(), REST_RESPONSE_ITEM_TYPE);
+                        if (responseDto.getMessage().equals(REST_SUCCESS_MESSAGE)) {
+                            callBack.onSuccess(responseDto.getData());
+                        } else {
+                            callBack.onError(responseDto.getMessage());
+                        }
+                    }
+                });
+    }
 }
