@@ -27,18 +27,19 @@
     </ScrollView>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/mainAddList"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
         android:background="@drawable/round_body"
         android:padding="0dp"
-        android:paddingBottom="15dp"
+        android:paddingTop="15dp"
         android:text="+"
         android:textSize="40sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/mainLoaderBar"
