@@ -18,4 +18,6 @@ public class HttpUtils {
 
     public static final Type REST_RESPONSE_ITEM_TYPE = new TypeToken<RestResponseDto<Item>>() {
     }.getType();
+    public static final Type REST_RESPONSE_ITEMLIST_TYPE = new TypeToken<RestResponseDto<ItemList>>() {
+    }.getType();
 }

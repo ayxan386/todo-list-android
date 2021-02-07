@@ -10,7 +10,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.TODOList">
-        <activity android:name=".activity.main.ItemDetailActivity"></activity>
+        <activity android:name=".activity.ItemListForm"></activity>
+        <activity android:name=".activity.main.ItemDetailActivity" />
         <activity android:name=".activity.auth.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

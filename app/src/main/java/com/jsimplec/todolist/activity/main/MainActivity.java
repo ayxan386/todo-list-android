@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.jsimplec.todolist.R;
+import com.jsimplec.todolist.activity.ItemListForm;
 import com.jsimplec.todolist.activity.auth.LoginActivity;
 import com.jsimplec.todolist.callback.SuccessErrorCallBack;
 import com.jsimplec.todolist.httpclient.ItemsClient;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static Context applicationContext;
     public static MainActivity mainActivity;
     private ProgressBar progressBar;
+    private View addButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,7 +60,15 @@ public class MainActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.mainLoaderBar);
 
+        addButton = findViewById(R.id.mainAddList);
+        addButton.setOnClickListener(v -> openAddListView());
+
         loadData();
+    }
+
+    private void openAddListView() {
+        Intent intent = new Intent(this, ItemListForm.class);
+        startActivity(intent);
     }
 
     private boolean checkForToken() {
