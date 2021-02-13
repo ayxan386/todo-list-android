@@ -28,6 +28,7 @@ import okhttp3.Response;
 import static com.jsimplec.todolist.util.HttpUtils.REST_RESPONSE_ITEMLIST_TYPE;
 import static com.jsimplec.todolist.util.HttpUtils.REST_RESPONSE_ITEM_TYPE;
 import static com.jsimplec.todolist.util.HttpUtils.REST_RESPONSE_LIST_ITEMLIST_TYPE;
+import static com.jsimplec.todolist.util.HttpUtils.REST_RESPONSE_STRING_TYPE;
 import static com.jsimplec.todolist.util.constants.StaticConstants.JSON;
 import static com.jsimplec.todolist.util.constants.StaticConstants.MS_BASE_URL;
 
@@ -149,6 +150,34 @@ public class ItemsClient {
                         RestResponseDto<ItemList> responseDto = objectMapper.fromJson(response.body().string(), REST_RESPONSE_ITEMLIST_TYPE);
                         if (responseDto.getMessage().equals(REST_SUCCESS_MESSAGE)) {
                             callBack.onSuccess(responseDto.getData());
+                        } else {
+                            callBack.onError(responseDto.getMessage());
+                        }
+                    }
+                });
+    }
+
+    public void deleteItem(Item item, SuccessErrorCallBack<Item> callBack) {
+        SharedPreferences preferences = MainActivity.applicationContext
+                .getSharedPreferences(StaticConstants.PREFERENCE_TODO_AUTH, Context.MODE_PRIVATE);
+        String token = preferences.getString("token", "123");
+        Request request = new Request.Builder()
+                .url(String.format("%s/item?id=", MS_BASE_URL, item.getId()))
+                .header(StaticConstants.AUTHORIZATION_HEADER_NAME, HttpUtils.makeAuthHeader(token))
+                .delete(RequestBody.create("".getBytes(), JSON))
+                .build();
+        httpClient.newCall(request)
+                .enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                        callBack.onError(e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                        RestResponseDto<String> responseDto = objectMapper.fromJson(response.body().string(), REST_RESPONSE_STRING_TYPE);
+                        if (responseDto.getMessage().equals(REST_SUCCESS_MESSAGE)) {
+                            callBack.onSuccess(item);
                         } else {
                             callBack.onError(responseDto.getMessage());
                         }

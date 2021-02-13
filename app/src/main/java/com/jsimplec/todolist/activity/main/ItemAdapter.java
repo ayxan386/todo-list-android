@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.jsimplec.todolist.R;
 import com.jsimplec.todolist.callback.ErrorCallBack;
 import com.jsimplec.todolist.callback.StartActivityCallBack;
+import com.jsimplec.todolist.callback.SuccessErrorCallBack;
 import com.jsimplec.todolist.httpclient.ItemsClient;
 import com.jsimplec.todolist.model.Item;
 
@@ -24,10 +26,12 @@ import org.jetbrains.annotations.NotNull;
 public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
 
     private final StartActivityCallBack<Item> callBack;
+    private SuccessErrorCallBack<Item> deleteItemCallBack;
 
-    protected ItemAdapter(StartActivityCallBack<Item> callBack) {
+    protected ItemAdapter(StartActivityCallBack<Item> callBack, SuccessErrorCallBack<Item> deleteItemCallBack) {
         super(DIFF_CALLBACK);
         this.callBack = callBack;
+        this.deleteItemCallBack = deleteItemCallBack;
     }
 
     @NonNull
@@ -43,11 +47,12 @@ public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
         holder.bind(getItem(position));
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView title;
         private final MaterialCheckBox status;
         private final StartActivityCallBack<Item> callBack;
+        private final Button deleteButton;
         private Item item;
         private boolean hasBinded;
 
@@ -55,6 +60,7 @@ public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
             super(itemView);
             title = itemView.findViewById(R.id.itemTitle);
             status = itemView.findViewById(R.id.itemCheckBox);
+            deleteButton = itemView.findViewById(R.id.itemDeleteButton);
 
             this.callBack = callBack;
         }
@@ -73,9 +79,10 @@ public class ItemAdapter extends ListAdapter<Item, ItemAdapter.ViewHolder> {
             this.item = item;
             if (!hasBinded) {
                 status.setOnCheckedChangeListener(updateStatus());
-                title.setOnClickListener(view -> {
-                    callBack.startActivity(ItemDetailActivity.class, item);
-                });
+                title.setOnClickListener(view -> callBack.startActivity(ItemDetailActivity.class, item));
+
+                deleteButton.setOnClickListener(v -> ItemsClient.ITEMS_CLIENT.deleteItem(item, deleteItemCallBack));
+
                 hasBinded = true;
             }
             title.setText(item.getTitle());

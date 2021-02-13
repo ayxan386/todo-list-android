@@ -21,6 +21,7 @@
     </TextView>
 
     <Button
+        android:id="@+id/itemDeleteButton"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:background="@drawable/round_body_no_stroke"

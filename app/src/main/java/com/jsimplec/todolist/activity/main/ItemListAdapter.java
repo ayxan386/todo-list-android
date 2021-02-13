@@ -38,6 +38,7 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
             };
 
     private StartActivityCallBack callBack;
+    private SuccessErrorCallBack<Item> deleteItemCallBack;
 
     public ItemListAdapter(StartActivityCallBack callBack) {
         super(DIFF_CALLBACK);
@@ -58,7 +59,7 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
         holder.bind(itemList);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView title;
         private final RecyclerView content;
@@ -67,14 +68,14 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
         private final MaterialButton addItemButton;
         private ItemList data;
 
-        public ViewHolder(@NonNull View itemView, StartActivityCallBack callBack) {
+        public ViewHolder(@NonNull View itemView, StartActivityCallBack startActivityCallBack) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
             itemTitle = itemView.findViewById(R.id.itemListItemTitle);
             addItemButton = itemView.findViewById(R.id.itemListSave);
             content = itemView.findViewById(R.id.content);
 
-            itemAdapter = new ItemAdapter(callBack);
+            itemAdapter = new ItemAdapter(startActivityCallBack, deleteItemCallBack);
             content.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
             content.setAdapter(itemAdapter);
 
@@ -109,6 +110,19 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
             }
             title.setText(itemList.getName());
             itemAdapter.submitList(itemList.getItems());
+
+            deleteItemCallBack = new SuccessErrorCallBack<Item>() {
+                @Override
+                public void onSuccess(Item response) {
+                    itemList.deleteItem(response);
+                    bind(itemList);
+                }
+
+                @Override
+                public void onError(String errorMessage) {
+
+                }
+            };
         }
     }
 }
