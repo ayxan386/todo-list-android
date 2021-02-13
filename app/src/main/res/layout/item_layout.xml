@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -12,10 +13,20 @@
 
     <TextView
         android:id="@+id/itemTitle"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:text="Chaos">
+        android:layout_weight="0.7"
+        tools:text="Chaos aaaaaaaaaaaaaaaaaaaaa">
 
     </TextView>
+
+    <Button
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:background="@drawable/round_body"
+        android:text="X"
+        android:textColor="@color/red"
+        android:textSize="24sp"
+        app:backgroundTint="@color/white" />
 
 </LinearLayout>
