@@ -120,7 +120,7 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
 
                 @Override
                 public void onError(String errorMessage) {
-
+                    MainActivity.mainActivity.showMainError(errorMessage);
                 }
             };
         }
