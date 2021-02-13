@@ -162,7 +162,7 @@ public class ItemsClient {
                 .getSharedPreferences(StaticConstants.PREFERENCE_TODO_AUTH, Context.MODE_PRIVATE);
         String token = preferences.getString("token", "123");
         Request request = new Request.Builder()
-                .url(String.format("%s/item?id=", MS_BASE_URL, item.getId()))
+                .url(String.format("%s/item-list/item?id=%s", MS_BASE_URL, item.getId()))
                 .header(StaticConstants.AUTHORIZATION_HEADER_NAME, HttpUtils.makeAuthHeader(token))
                 .delete(RequestBody.create("".getBytes(), JSON))
                 .build();
