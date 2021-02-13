@@ -21,10 +21,10 @@
     </TextView>
 
     <Button
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:background="@drawable/round_body"
-        android:text="X"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/round_body_no_stroke"
+        android:text="x"
         android:textColor="@color/red"
         android:textSize="24sp"
         app:backgroundTint="@color/white" />
