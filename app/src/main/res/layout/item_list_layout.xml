@@ -24,7 +24,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="30dp"
-        android:paddingLeft="30dp">
+        android:paddingLeft="30dp"
+        android:paddingEnd="50dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/content"

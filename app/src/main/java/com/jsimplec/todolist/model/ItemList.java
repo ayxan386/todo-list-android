@@ -61,4 +61,10 @@ public class ItemList {
         newItems.add(item);
         return new ItemList(id, name, username, updateDate, newItems);
     }
+
+    public ItemList deleteItem(Item item) {
+        ArrayList<Item> newItems = new ArrayList<>(this.items);
+        newItems.remove(item);
+        return new ItemList(id, name, username, updateDate, newItems);
+    }
 }
