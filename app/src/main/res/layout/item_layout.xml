@@ -22,12 +22,10 @@
 
     <Button
         android:id="@+id/itemDeleteButton"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:background="@drawable/round_body_no_stroke"
-        android:text="x"
-        android:textColor="@color/red"
-        android:textSize="24sp"
-        app:backgroundTint="@color/white" />
+        android:layout_width="25dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.1"
+        android:background="@drawable/ic_baseline_delete_forever_24"
+        app:backgroundTint="#000000" />
 
 </LinearLayout>
