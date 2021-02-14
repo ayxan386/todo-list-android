@@ -21,6 +21,7 @@ import com.jsimplec.todolist.httpclient.ItemsClient;
 import com.jsimplec.todolist.model.ItemList;
 import com.jsimplec.todolist.util.constants.StaticConstants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivity mainActivity;
     private ProgressBar progressBar;
     private View addButton;
+    private List<ItemList> data;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,16 +77,16 @@ public class MainActivity extends AppCompatActivity {
         return preferences.contains("token");
     }
 
-    private void loadData() {
+    public void loadData() {
         setProgressBar(true);
         ItemsClient.ITEMS_CLIENT
                 .loadData(getToken(), new SuccessErrorCallBack<List<ItemList>>() {
+
                     @Override
                     public void onSuccess(List<ItemList> response) {
                         setProgressBar(false);
-                        runOnUiThread(() -> {
-                            listAdapter.submitList(response);
-                        });
+                        data = response;
+                        renderList();
                     }
 
                     @Override
@@ -95,6 +97,13 @@ public class MainActivity extends AppCompatActivity {
                         });
                     }
                 });
+    }
+
+    public void renderList() {
+        runOnUiThread(() -> {
+            listAdapter.submitList(data);
+            listAdapter.notifyDataSetChanged();
+        });
     }
 
     private String getToken() {
@@ -124,5 +133,17 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    public void addListItem(ItemList itemList) {
+        ArrayList<ItemList> newData = new ArrayList<>(data);
+        newData.add(itemList);
+        data = newData;
+    }
+
+    public void removeListItem(ItemList itemList, int position) {
+        ArrayList<ItemList> newData = new ArrayList<>(data);
+        newData.remove(itemList);
+        data = newData;
     }
 }
