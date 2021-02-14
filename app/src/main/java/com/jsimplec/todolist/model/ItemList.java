@@ -53,7 +53,7 @@ public class ItemList {
 
     @Override
     public String toString() {
-        return String.format("ItemList{id='%s'}", id);
+        return String.format("ItemList{id='%s', items=%s}", id, items.toString());
     }
 
     public ItemList addItem(Item item) {

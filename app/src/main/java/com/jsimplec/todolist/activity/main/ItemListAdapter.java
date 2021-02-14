@@ -56,7 +56,7 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ItemList itemList = getItem(position);
-        holder.bind(itemList);
+        holder.bind(itemList, position);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -65,6 +65,7 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
         private final RecyclerView content;
         private final ItemAdapter itemAdapter;
         private final TextInputLayout itemTitle;
+        private int position;
         private final MaterialButton addItemButton;
         private ItemList data;
 
@@ -92,7 +93,7 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
                 @Override
                 public void onSuccess(Item response) {
                     MainActivity.mainActivity.setProgressBar(false);
-                    bind(data.addItem(response));
+                    bind(data.addItem(response), position);
                 }
 
                 @Override
@@ -103,8 +104,9 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
             });
         }
 
-        public void bind(ItemList itemList) {
+        public void bind(ItemList itemList, int position) {
             data = itemList;
+            this.position = position;
             if (data != null) {
                 addItemButton.setOnClickListener(v -> saveNewItem());
             }
@@ -114,8 +116,10 @@ public class ItemListAdapter extends ListAdapter<ItemList, ItemListAdapter.ViewH
             deleteItemCallBack = new SuccessErrorCallBack<Item>() {
                 @Override
                 public void onSuccess(Item response) {
-                    itemList.deleteItem(response);
-                    bind(itemList);
+                    data = itemList.deleteItem(response);
+                    MainActivity.mainActivity.removeListItem(data, position);
+                    MainActivity.mainActivity.addListItem(data);
+                    MainActivity.mainActivity.renderList();
                 }
 
                 @Override
